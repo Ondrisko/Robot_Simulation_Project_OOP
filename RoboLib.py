@@ -6,12 +6,13 @@ from math import pow
 import helper
 from typing import Literal
 
+# set up literals
 _WHEELPOSTYPES = Literal["Front", "Middle", "Corners"]
 _CONTROLTYPES = Literal["Manual", "SpaceStart", "Demo"]
 
 
-# the robot class should be a rigid body node containing a list that refers to any additional structural parts and wheels 
-# and a method to control its movement
+# the robot class is an extension of a bullet vehicle with a list of connected nodes and methods of how to control them 
+# (these will be added in the final code)
 class Robot(BulletVehicle):
     
     def __init__(self, vehicle, parts_on_init: set):
@@ -26,7 +27,7 @@ class Robot(BulletVehicle):
         for i in self.getWheels():
             i.setBrake(0)
     
-
+    # a method that switches between types of control, demo means the robot moves on a square shaped path
     def setControlType(type: _CONTROLTYPES):
         if type == 'Demo':
             ...
@@ -41,11 +42,13 @@ class Robot(BulletVehicle):
         ...
 
 
+# a function that creates a robot with two nodes and a specified configuration of wheels
 def createTwoStoryRobot(world: BulletWorld, base_size: Vec3, upper_size: Vec3, dist: float, wheel_pos: _WHEELPOSTYPES, 
                         position=Vec3(0, 0, 10)) -> Robot:
     
     parts = []
 
+    # create the first box ('base') 
     shape = BulletBoxShape(base_size)
     base_node = BulletRigidBodyNode("Base")
     base_node.setMass((base_size.x + base_size.y + base_size.z))
@@ -88,6 +91,7 @@ def createTwoStoryRobot(world: BulletWorld, base_size: Vec3, upper_size: Vec3, d
 
     parts.append([node, cons])
 
+    # add wheels
     if wheel_pos == 'Front':
         for i in range(2):
             wheel = vehicle.createWheel()

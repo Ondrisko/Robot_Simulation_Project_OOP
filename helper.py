@@ -5,8 +5,8 @@ from panda3d.bullet import BulletCapsuleShape, BulletDebugNode, BulletBoxShape, 
 from panda3d.bullet import BulletSphereShape, BulletConeTwistConstraint, BulletGenericConstraint
 from panda3d.core import TransformState
 
-
-def createPlane(world, fenced=False) -> None:
+# a function to create a plane and give it a texture
+def createPlane(world) -> None:
     shape = BulletPlaneShape(Vec3(0, 0, 1), 1)
     node = BulletRigidBodyNode('Ground')
     node.addShape(shape)
@@ -21,7 +21,7 @@ def createPlane(world, fenced=False) -> None:
     model.setTexture(texture, 1)
 
 
-
+# connect two nodes vertically without movement at the constraint joint
 def connectNodesVertical(world: BulletWorld, node1: BulletRigidBodyNode, node2: 
                  BulletRigidBodyNode, distance: float) -> BulletGenericConstraint:
     
@@ -34,10 +34,11 @@ def connectNodesVertical(world: BulletWorld, node1: BulletRigidBodyNode, node2:
     world.attachConstraint(cons)
     return cons
 
-
+# do all the miscellaneous world setup
 def worldSetup(debug = False) -> BulletWorld:
     base = ShowBase()
     
+    # set camera position
     base.cam.setPos(0, -70, 20)
     base.cam.lookAt(0, 0, 5)
 
@@ -48,6 +49,8 @@ def worldSetup(debug = False) -> BulletWorld:
     # create world for bullet
     world = BulletWorld()
     world.setGravity(Vec3(0, 0, -9.81))
+    
+    # show debug meshes if they are enabled
     if debug:
         dn = BulletDebugNode('Debug')
         dn.showWireframe(True)
