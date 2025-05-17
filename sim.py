@@ -11,14 +11,20 @@ def main() -> None:
 
 
     # create a robot with given dimensions
-    robot = rl.createTwoStoryRobot(world, Vec3(3, 3, 1), Vec3(1, 1, 0.5), 4, 'Front')
+    robot = rl.createTwoStoryRobot(world, Vec3(3, 3.5, 2), Vec3(0.5, 0.5, 0.5), 6, 'Front', 'Robot1', base_mass_mult=1)
+    robot.setMoveMode('Demo')
 
 
     # it is possible to create a different robot, however these specific dimensions cause erratic behaviour
-    # robot2 = rl.createTwoStoryRobot(world, Vec3(3, 3, 2), Vec3(2, 2, 2), 4.1, 'Front', Vec3(10, 10, 10))
+    robot2 = rl.createTwoStoryRobot(world, Vec3(3, 3, 2), Vec3(2, 2, 2), 4.1, 'Corners', 'Robot2', position=Vec3(10, 10, 3))
+    robot2.setMoveMode("Demo")
 
     # run the panda3d scene
+    children = render.getChildren()
+    print(children)
+    print(taskMgr)
     base.run()
+
 
 
     
