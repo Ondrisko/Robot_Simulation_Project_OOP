@@ -1,5 +1,5 @@
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import Vec3, Point3
+from panda3d.core import Vec3, Point3, NodePath
 from panda3d.bullet import BulletPlaneShape
 from panda3d.bullet import BulletCapsuleShape, BulletDebugNode, BulletBoxShape, BulletRigidBodyNode, BulletWorld
 from panda3d.bullet import BulletSphereShape, BulletConeTwistConstraint, BulletGenericConstraint
@@ -15,8 +15,8 @@ def createPlane(world) -> None:
     world.attachRigidBody(node)
     model = loader.loadModel('models/box.egg')
     texture = loader.loadTexture('Grid.jpg')
-    model.setPos(-75, -75, 0)
-    model.setScale(150, 150, 1)
+    model.setPos(-750, -750, 0)
+    model.setScale(1500, 1500, 1)
     model.reparentTo(np)
     model.setTexture(texture, 1)
 
@@ -25,7 +25,7 @@ def createPlane(world) -> None:
 def connectNodesVertical(world: BulletWorld, node1: BulletRigidBodyNode, node2: 
                  BulletRigidBodyNode, distance: float) -> BulletGenericConstraint:
     
-
+    # create the connection and diasble movement at the joint
     cons = BulletGenericConstraint(node1, node2, TransformState.makePos(Vec3(0, 0, distance/2)), 
                                    TransformState.makePos(Vec3(0, 0, -distance/2)), False)
     cons.setAngularLimit(1, 0, 0)
@@ -34,12 +34,22 @@ def connectNodesVertical(world: BulletWorld, node1: BulletRigidBodyNode, node2:
     world.attachConstraint(cons)
     return cons
 
+# create a function that follows a given NodePath
+def cameraFollow(np: NodePath):
+    def cam(task):
+        pos = np.getPos()
+        pos = pos.__add__(Vec3(0, 70, 20))
+        base.cam.setPos(pos)
+        base.cam.lookAt(np.getPos())
+        return task.cont
+    taskMgr.add(cam, "cam")
+
 # do all the miscellaneous world setup
 def worldSetup(debug = False) -> BulletWorld:
     base = ShowBase()
     
     # set camera position
-    base.cam.setPos(0, -70, 20)
+    base.cam.setPos(0, 70, 20)
     base.cam.lookAt(0, 0, 5)
 
    
