@@ -143,7 +143,7 @@ class Robot(DirectObject.DirectObject):
                 current_direction = current_direction.xy
                 current_direction = current_direction.normalized()
                 current_angle = unitY.signedAngleDeg(current_direction)
-                #print(current_angle)
+                # print(current_angle)
 
                 # ge tthe result from the pid and then give the wheels appropriate force
                 wanted_engine_force = self.PID.calculate(target_angle, current_angle)
@@ -154,8 +154,8 @@ class Robot(DirectObject.DirectObject):
                     self.vehicle.applyEngineForce(wanted_engine_force, 1)
                     self.vehicle.applyEngineForce(wanted_engine_force*0.1, 0)
                 else:
-                    self.vehicle.applyEngineForce(self.default_force, 1)
-                    self.vehicle.applyEngineForce(self.default_force, 0)
+                    self.vehicle.applyEngineForce(self.default_force/2, 1)
+                    self.vehicle.applyEngineForce(self.default_force/2, 0)
                 return task.cont
             
             # setup the timer and add the function to the task manager
@@ -233,15 +233,11 @@ class Robot(DirectObject.DirectObject):
     def moveDemoFrontWheelRobot(self):
         match self.move_demo_stage:
             case 0:
-                if self.moveAndTurnPIDTimed(45, 3): 
+                if self.moveAndTurnPIDTimed(20, 3): 
                     self.move_demo_stage = 1
                     print('now in demo stage ' + str(self.move_demo_stage))
             case 1: 
-                if self.moveTimed(15, 5):
-                    self.move_demo_stage = 2
-                    print('now in demo stage ' + str(self.move_demo_stage))
-            case 2:
-                if self.turnFrontWheelRobot(90):
+                if self.moveAndTurnPIDTimed(-20, 3):
                     self.move_demo_stage = 0
                     print('now in demo stage ' + str(self.move_demo_stage))
 
